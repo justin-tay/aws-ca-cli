@@ -1,0 +1,52 @@
+{
+  "name": "aws-ca",
+  "version": "1.0.0",
+  "main": "dist/index.cjs",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "build": "node esbuild.config.js",
+    "test": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --ext .ts --fix"
+  },
+  "author": "Justin Tay",
+  "description": "Command line tool to manage certificate authority using AWS resources",
+  "devDependencies": {
+    "@eslint/js": "^9.32.0",
+    "esbuild": "^0.25.8",
+    "eslint": "^9.32.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.3",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.38.0",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.850.0",
+    "@aws-sdk/client-secrets-manager": "^3.848.0",
+    "@aws-sdk/client-ssm": "^3.849.0",
+    "@aws-sdk/lib-dynamodb": "^3.850.0",
+    "@peculiar/asn1-pkcs8": "^2.4.0",
+    "@peculiar/asn1-schema": "^2.4.0",
+    "@peculiar/x509": "^1.13.0",
+    "commander": "^14.0.0",
+    "pkijs": "^3.2.5"
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "quoteProps": "as-needed",
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "bracketSameLine": false,
+    "arrowParens": "always",
+    "requirePragma": false,
+    "insertPragma": false,
+    "proseWrap": "preserve",
+    "htmlWhitespaceSensitivity": "css",
+    "vueIndentScriptAndStyle": false
+  }
+}

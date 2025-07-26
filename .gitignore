@@ -1,0 +1,17 @@
+*.js
+!.eslintrc.js
+!jest.config.js
+!esbuild.config.js
+*.d.ts
+node_modules
+coverage
+dist
+
+# Mac
+.DS_Store
+
+*.p12
+*.pem
+*.csr
+*.inf
+*.crt
