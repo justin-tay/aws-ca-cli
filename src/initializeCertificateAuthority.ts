@@ -1,6 +1,7 @@
 import KeyStore from './KeyStore';
 import { configuration } from './config';
 import { createCaHierarchy } from './createCaHierarchy';
+import { getObjectUrl } from './getObjectUrl';
 import { saveCa } from './saveCa';
 import { saveCaIndex } from './saveCaIndex';
 
@@ -9,11 +10,21 @@ export async function initializeCertificateAuthority() {
   const rootCaName = configuration.rootCaName;
   const subCaName = configuration.subCaName;
 
+  let crlDistributionPoint;
+
+  if (configuration.rootCaCrlBucketName && configuration.rootCaCrlKey) {
+    crlDistributionPoint = getObjectUrl({
+      bucketName: configuration.rootCaCrlBucketName,
+      key: configuration.rootCaCrlKey,
+    });
+  }
+
   const caHierarchy = await createCaHierarchy({
     rootCa: { name: rootCaName, validity: 20 },
     subCa: {
       name: subCaName,
       validity: 15,
+      crlDistributionPoint,
     },
   });
   try {
@@ -21,11 +32,15 @@ export async function initializeCertificateAuthority() {
       await saveCa({
         certificate: caHierarchy.rootCa.certificate,
         keySecretId: configuration.rootCaKeySecretId,
+        crlBucketName: configuration.rootCaCrlBucketName,
+        crlKey: configuration.rootCaCrlKey,
       });
     } else {
       await saveCa({
         certificate: caHierarchy.rootCa.certificate,
         keyParameterName: configuration.rootCaKeyParameterName,
+        crlBucketName: configuration.rootCaCrlBucketName,
+        crlKey: configuration.rootCaCrlKey,
       });
     }
     await saveCaIndex({

@@ -24,7 +24,7 @@ program
   .command('get-certificate-authority-certificate')
   .description('gets the certificate chain')
   .option('--out <filename>', 'filename to save the certificate to')
-  .option('--outform <type>', 'format pem or p12 or p7b', 'pem')
+  .option('--outform <type>', 'format pem or p12 or p7b', 'p7b')
   .action(async function () {
     try {
       const certificateChain = await loadCertificateChain({
@@ -69,7 +69,7 @@ program
   .description('issue a certificate for a certificate sign request')
   .requiredOption('--csr <file>')
   .option('--out <filename>', 'filename to save the certificate chain to')
-  .option('--outform <type>', 'format pem or p12 or p7b', 'pem')
+  .option('--outform <type>', 'format pem or p12 or p7b', 'p7b')
   .action(async function () {
     const content = fs.readFileSync(this.opts().csr);
     const csr = new Pkcs10CertificateRequest(content);

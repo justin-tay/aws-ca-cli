@@ -25,6 +25,8 @@ export const configuration = {
     process.env.ROOT_CA_KEY_SECRET_ID ?? 'prod/aws-ca/root-ca/key',
   rootCaKeyParameterName:
     process.env.ROOT_CA_KEY_PARAMETER_NAME ?? '/prod/aws-ca/root-ca/key',
+  rootCaCrlBucketName: process.env.ROOT_CA_CRL_BUCKET_NAME ?? 'aws-ca-crls',
+  rootCaCrlKey: process.env.ROOT_CA_CRL_KEY ?? 'ca.crl',
   subCaName: process.env.SUB_CA_NAME ?? getSubCaName(name),
   subCaKeySecretId:
     process.env.SUB_CA_KEY_SECRET_ID ?? 'prod/aws-ca/sub-ca/key',
