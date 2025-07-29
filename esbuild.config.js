@@ -1,6 +1,7 @@
 import esbuild from 'esbuild';
+import fs from 'fs';
 
-await esbuild.build({
+const result = await esbuild.build({
   entryPoints: ['src/index.ts'],
   outfile: 'dist/main.cjs',
   bundle: true,
@@ -11,4 +12,7 @@ await esbuild.build({
   sourcemap: false,
   external: [],
   packages: 'bundle',
+  metafile: true,
 });
+
+fs.writeFileSync('dist/meta.json', JSON.stringify(result.metafile));

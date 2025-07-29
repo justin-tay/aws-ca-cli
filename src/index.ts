@@ -14,10 +14,6 @@ import { config } from 'dotenv';
 
 config();
 
-console.log(process.env);
-
-console.log(getConfig());
-
 initializeCryptoEngine();
 
 const program = new Command();
