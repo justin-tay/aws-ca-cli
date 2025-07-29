@@ -1,10 +1,11 @@
 import { CreateTableCommand } from '@aws-sdk/client-dynamodb';
 import { waitForTableActive } from './waitForTableActive';
 import { getDynamoDBClient } from './getDynamoDBClient';
+import { configuration } from './config';
 
 export async function createCaTable() {
   const client = getDynamoDBClient();
-  const tableName = 'CertificateAuthority';
+  const tableName = configuration.caTableName;
   const command = new CreateTableCommand({
     TableName: tableName,
     AttributeDefinitions: [

@@ -12,7 +12,7 @@ import { loadParameter } from './loadParameter';
 export async function loadSubCa() {
   const docClient = getDynamoDBDocumentClient();
   const command = new QueryCommand({
-    TableName: 'CertificateAuthority',
+    TableName: configuration.caTableName,
     KeyConditionExpression: 'SubjectName = :subjectName',
     ExpressionAttributeValues: {
       ':subjectName': configuration.subCaName,

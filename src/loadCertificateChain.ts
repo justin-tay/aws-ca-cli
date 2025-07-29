@@ -1,6 +1,7 @@
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { X509Certificate } from '@peculiar/x509';
 import { getDynamoDBDocumentClient } from './getDynamoDBDocumentClient';
+import { configuration } from './config';
 
 export async function loadCertificateChain(params: { issuerName: string }) {
   const docClient = getDynamoDBDocumentClient();
@@ -9,7 +10,7 @@ export async function loadCertificateChain(params: { issuerName: string }) {
   let subjectName = issuerName;
   while (true) {
     const command = new QueryCommand({
-      TableName: 'CertificateAuthority',
+      TableName: configuration.caTableName,
       KeyConditionExpression: 'SubjectName = :subjectName',
       ExpressionAttributeValues: {
         ':subjectName': subjectName,

@@ -20,20 +20,25 @@ const keyAlgorithm = {
 };
 
 export const configuration = {
+  caTableName: process.env.CA_TABLE_NAME ?? 'CertificateAuthority',
+  caIndexTableName:
+    process.env.CA_INDEX_TABLE_NAME ?? 'CertificateAuthortityIndex',
   rootCaName: process.env.ROOT_CA_NAME ?? getRootCaName(name),
   rootCaKeySecretId:
     process.env.ROOT_CA_KEY_SECRET_ID ?? 'prod/aws-ca/root-ca/key',
   rootCaKeyParameterName:
     process.env.ROOT_CA_KEY_PARAMETER_NAME ?? '/prod/aws-ca/root-ca/key',
-  rootCaCrlBucketName: process.env.ROOT_CA_CRL_BUCKET_NAME ?? 'aws-ca-crls',
-  rootCaCrlKey: process.env.ROOT_CA_CRL_KEY ?? 'ca.crl',
+  rootCaCrlBucketName:
+    process.env.ROOT_CA_CRL_BUCKET_NAME ?? process.env.CA_CRL_BUCKET_NAME ?? '',
+  rootCaCrlKey: process.env.ROOT_CA_CRL_KEY ?? 'root-ca.crl',
   subCaName: process.env.SUB_CA_NAME ?? getSubCaName(name),
   subCaKeySecretId:
     process.env.SUB_CA_KEY_SECRET_ID ?? 'prod/aws-ca/sub-ca/key',
   subCaKeyParameterName:
     process.env.SUB_CA_KEY_PARAMETER_NAME ?? '/prod/aws-ca/sub-ca/key',
-  subCaCrlBucketName: process.env.SUB_CA_CRL_BUCKET_NAME ?? 'aws-ca-crls',
-  subCaCrlKey: process.env.SUB_CA_CRL_KEY ?? 'subca.crl',
+  subCaCrlBucketName:
+    process.env.SUB_CA_CRL_BUCKET_NAME ?? process.env.CA_CRL_BUCKET_NAME ?? '',
+  subCaCrlKey: process.env.SUB_CA_CRL_KEY ?? 'sub-ca.crl',
   keyStore: process.env.KEYSTORE ?? KeyStore.ParameterStore,
   //keyStore: KeyStore.SecretsMamager
   keyAlgorithm,

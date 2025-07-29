@@ -2,6 +2,7 @@ import { X509Certificate } from '@peculiar/x509';
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import CertificateStatus from './CertificateStatus';
 import { getDynamoDBDocumentClient } from './getDynamoDBDocumentClient';
+import { configuration } from './config';
 
 export interface SaveCaIndexParams {
   ca: {
@@ -15,7 +16,7 @@ export interface SaveCaIndexParams {
 export async function saveCaIndex(params: SaveCaIndexParams) {
   const { ca, issued } = params;
   const command = new PutCommand({
-    TableName: 'CertificateAuthorityIndex',
+    TableName: configuration.caIndexTableName,
     Item: {
       SubjectName: issued.certificate.subjectName.toString(),
       IssuerName: ca.certificate.subjectName.toString(),

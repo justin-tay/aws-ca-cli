@@ -1,10 +1,11 @@
 import { CreateTableCommand } from '@aws-sdk/client-dynamodb';
 import { waitForTableActive } from './waitForTableActive';
 import { getDynamoDBClient } from './getDynamoDBClient';
+import { configuration } from './config';
 
 export async function createCaIndexTable() {
   const client = getDynamoDBClient();
-  const tableName = 'CertificateAuthorityIndex';
+  const tableName = configuration.caIndexTableName;
   const command = new CreateTableCommand({
     TableName: tableName,
     AttributeDefinitions: [

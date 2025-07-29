@@ -26,7 +26,7 @@ export async function revokeCertificate(params: {
   const { ca, serialNumber, reason } = params;
   const docClient = getDynamoDBDocumentClient();
   const command = new QueryCommand({
-    TableName: 'CertificateAuthority',
+    TableName: configuration.caTableName,
     KeyConditionExpression: 'SubjectName = :subjectName',
     ExpressionAttributeValues: {
       ':subjectName': ca,
@@ -47,7 +47,7 @@ export async function revokeCertificate(params: {
   }
 
   const certificateCommand = new QueryCommand({
-    TableName: 'CertificateAuthorityIndex',
+    TableName: configuration.caIndexTableName,
     KeyConditionExpression:
       'IssuerName = :issuerName and SerialNumber = :serialNumber',
     ExpressionAttributeValues: {
@@ -128,7 +128,7 @@ export async function revokeCertificate(params: {
   await saveBucket(crlBucketName, crlKey, new Uint8Array(crl.rawData));
 
   const updateCommand = new UpdateCommand({
-    TableName: 'CertificateAuthorityIndex',
+    TableName: configuration.caIndexTableName,
     Key: {
       IssuerName: ca,
       SerialNumber: serialNumber,

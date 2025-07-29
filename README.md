@@ -23,6 +23,25 @@ Commands:
   help [command]                                   display help for command
 ```
 
+## Configuration
+
+| Environment Variable          | Description                                                | Default
+| ----------------------------- | ---------------------------------------------------------- | -----------
+| `KEYSTORE`                    | Used to configure if the key is stored in `ParameterStore` or `SecretsManager`           | `ParameterStore`
+| `CA_TABLE_NAME`               | DynamoDB Table storing the Certificate Authority           | `CertificateAuthority`
+| `CA_INDEX_TABLE_NAME`         | DynamoDB Table storing the Certificate Authority Index     | `CertificateAuthorityIndex`
+| `ROOT_CA_NAME`                | Name for the Root CA                                       | `CN=Demo Root CA`
+| `ROOT_CA_KEY_SECRET_ID`       | Secret ID used to store the Root CA Key                    | `prod/aws-ca/root-ca/key`
+| `ROOT_CA_KEY_PARAMETER_NAME`  | Parameter Name used to store the Root CA Key               | `/prod/aws-ca/root-ca/key`
+| `ROOT_CA_CRL_BUCKET_NAME`     | Bucket Name used to store the Certificate Revocation List  | 
+| `ROOT_CA_CRL_KEY`             | Bucket Key used to store the Certificate Revocation List   | `root-ca.crl`
+| `SUB_CA_NAME `                | Name for the Sub CA                                        | `CN=Demo Sub CA 1`
+| `SUB_CA_KEY_SECRET_ID`        | Secret ID used to store the Sub CA Key                     | `prod/aws-ca/sub-ca/key`
+| `SUB_CA_KEY_PARAMETER_NAME`   | Parameter Name used to store the Sub CA Key                | `/prod/aws-ca/sub-ca/key`
+| `SUB_CA_CRL_BUCKET_NAME`      | Bucket Name used to store the Certificate Revocation List  | 
+| `SUB_CA_CRL_KEY`              | Bucket Key used to store the Certificate Revocation List   | `sub-ca.crl`
+| `AWS_REGION`                  | AWS Region                                                 | `ap-southeast-1`
+
 ## Resources
 
 | Logical ID                    | Type                             | Description
@@ -89,6 +108,8 @@ ProviderName = "Microsoft RSA SChannel Cryptographic Provider"
 ProviderType = 12
 RequestType = PKCS10
 KeyUsage = 0xa0
+HashAlgorithm = SHA256
+SuppressDefaults = true
  
 [EnhancedKeyUsageExtension]
 OID=1.3.6.1.5.5.7.3.2
@@ -103,7 +124,7 @@ The following command is used to link the previously generated private key with 
 This requires administrative privileges if `MachineKeySet` is `TRUE`.
 
 ```shell
-certreq -accept certificates.crt
+certreq -accept certificates.p7b
 ```
 
 Note that the certificate chain needs to already be installed in the certificate store in Windows otherwise the following error will be displayed.
