@@ -22,7 +22,7 @@ interface Config {
   subCaCrlBucketName: string | null;
   subCaCrlKey: string;
   keyStore: KeyStore;
-  keyAlgorithm: KeyAlgorithm;
+  keyAlgorithm: RsaHashedKeyGenParams | EcKeyGenParams;
   region: string;
   pepper: string;
 }

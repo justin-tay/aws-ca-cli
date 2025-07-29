@@ -14,7 +14,7 @@ export async function saveCa(params: {
   certificate: X509Certificate;
   keySecretId?: string;
   keyParameterName?: string;
-  crlBucketName?: string;
+  crlBucketName?: string | null;
   crlKey?: string;
 }) {
   const { certificate, keySecretId, keyParameterName, crlBucketName, crlKey } =
