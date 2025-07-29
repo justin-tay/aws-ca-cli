@@ -4,6 +4,7 @@ import fs from 'fs';
 const result = await esbuild.build({
   entryPoints: ['src/index.ts'],
   outfile: 'dist/main.cjs',
+  mainFields: ['module', 'main'],
   bundle: true,
   platform: 'node',
   target: 'node22',
