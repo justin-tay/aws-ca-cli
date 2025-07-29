@@ -1,4 +1,4 @@
-import { configuration } from './config';
+import { getConfig } from './getConfig';
 
 export function getObjectUrl(params: {
   bucketName: string;
@@ -6,6 +6,6 @@ export function getObjectUrl(params: {
   region?: string;
 }) {
   const { bucketName, key } = params;
-  const region = params.region ?? configuration.region;
+  const region = params.region ?? getConfig().region;
   return `http://${bucketName}.s3.${region}.com/${key}`;
 }

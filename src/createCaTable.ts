@@ -1,11 +1,11 @@
 import { CreateTableCommand } from '@aws-sdk/client-dynamodb';
 import { waitForTableActive } from './waitForTableActive';
 import { getDynamoDBClient } from './getDynamoDBClient';
-import { configuration } from './config';
+import { getConfig } from './getConfig';
 
 export async function createCaTable() {
   const client = getDynamoDBClient();
-  const tableName = configuration.caTableName;
+  const tableName = getConfig().caTableName;
   const command = new CreateTableCommand({
     TableName: tableName,
     AttributeDefinitions: [

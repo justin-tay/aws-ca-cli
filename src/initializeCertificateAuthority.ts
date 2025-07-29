@@ -1,5 +1,5 @@
 import KeyStore from './KeyStore';
-import { configuration } from './config';
+import { getConfig } from './getConfig';
 import { createCaHierarchy } from './createCaHierarchy';
 import { getObjectUrl } from './getObjectUrl';
 import { saveCa } from './saveCa';
@@ -7,15 +7,15 @@ import { saveCaIndex } from './saveCaIndex';
 
 export async function initializeCertificateAuthority() {
   console.info('Initializing certificate authority');
-  const rootCaName = configuration.rootCaName;
-  const subCaName = configuration.subCaName;
+  const rootCaName = getConfig().rootCaName;
+  const subCaName = getConfig().subCaName;
 
   let crlDistributionPoint;
 
-  if (configuration.rootCaCrlBucketName && configuration.rootCaCrlKey) {
+  if (getConfig().rootCaCrlBucketName && getConfig().rootCaCrlKey) {
     crlDistributionPoint = getObjectUrl({
-      bucketName: configuration.rootCaCrlBucketName,
-      key: configuration.rootCaCrlKey,
+      bucketName: getConfig().rootCaCrlBucketName,
+      key: getConfig().rootCaCrlKey,
     });
   }
 
@@ -28,19 +28,19 @@ export async function initializeCertificateAuthority() {
     },
   });
   try {
-    if (configuration.keyStore === KeyStore.SecretsManager) {
+    if (getConfig().keyStore === KeyStore.SecretsManager) {
       await saveCa({
         certificate: caHierarchy.rootCa.certificate,
-        keySecretId: configuration.rootCaKeySecretId,
-        crlBucketName: configuration.rootCaCrlBucketName,
-        crlKey: configuration.rootCaCrlKey,
+        keySecretId: getConfig().rootCaKeySecretId,
+        crlBucketName: getConfig().rootCaCrlBucketName,
+        crlKey: getConfig().rootCaCrlKey,
       });
     } else {
       await saveCa({
         certificate: caHierarchy.rootCa.certificate,
-        keyParameterName: configuration.rootCaKeyParameterName,
-        crlBucketName: configuration.rootCaCrlBucketName,
-        crlKey: configuration.rootCaCrlKey,
+        keyParameterName: getConfig().rootCaKeyParameterName,
+        crlBucketName: getConfig().rootCaCrlBucketName,
+        crlKey: getConfig().rootCaCrlKey,
       });
     }
     await saveCaIndex({
@@ -53,19 +53,19 @@ export async function initializeCertificateAuthority() {
     throw err;
   }
   try {
-    if (configuration.keyStore === KeyStore.SecretsManager) {
+    if (getConfig().keyStore === KeyStore.SecretsManager) {
       await saveCa({
         certificate: caHierarchy.subCa.certificate,
-        keySecretId: configuration.subCaKeySecretId,
-        crlBucketName: configuration.subCaCrlBucketName,
-        crlKey: configuration.subCaCrlKey,
+        keySecretId: getConfig().subCaKeySecretId,
+        crlBucketName: getConfig().subCaCrlBucketName,
+        crlKey: getConfig().subCaCrlKey,
       });
     } else {
       await saveCa({
         certificate: caHierarchy.subCa.certificate,
-        keyParameterName: configuration.subCaKeyParameterName,
-        crlBucketName: configuration.subCaCrlBucketName,
-        crlKey: configuration.subCaCrlKey,
+        keyParameterName: getConfig().subCaKeyParameterName,
+        crlBucketName: getConfig().subCaCrlBucketName,
+        crlKey: getConfig().subCaCrlKey,
       });
     }
     await saveCaIndex({

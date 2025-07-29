@@ -1,9 +1,9 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { configuration } from './config';
+import { getConfig } from './getConfig';
 
 let client: DynamoDBClient | undefined = undefined;
 
 export function getDynamoDBClient() {
-  client ??= new DynamoDBClient({ region: configuration.region });
+  client ??= new DynamoDBClient({ region: getConfig().region });
   return client;
 }

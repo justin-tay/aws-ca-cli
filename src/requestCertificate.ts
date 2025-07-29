@@ -2,14 +2,14 @@ import { createCsr } from './createCsr';
 import { signCertificate } from './signCertificate';
 import { loadSubCa } from './loadSubCa';
 import { saveCaIndex } from './saveCaIndex';
-import { configuration } from './config';
+import { getConfig } from './getConfig';
 import { getObjectUrl } from './getObjectUrl';
 
 export async function requestCertificate(params: { subject: string }) {
   const subCa = await loadSubCa();
   const { subject } = params;
   if (subCa.certificate && subject) {
-    const alg = configuration.keyAlgorithm;
+    const alg = getConfig().keyAlgorithm;
     const clientKeys = await crypto.subtle.generateKey(alg, true, [
       'sign',
       'verify',

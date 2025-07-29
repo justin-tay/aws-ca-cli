@@ -2,7 +2,7 @@ import { JsonName, Name, X509Certificate } from '@peculiar/x509';
 import { createCa } from './createCa';
 import { createCsr } from './createCsr';
 import { signCertificate } from './signCertificate';
-import { configuration } from './config';
+import { getConfig } from './getConfig';
 
 export interface CreateCaHierarchyParams {
   rootCa: {
@@ -29,7 +29,7 @@ export async function createCaHierarchy(
 ): Promise<CreateCaHierarchyResult> {
   const { rootCa, subCa } = params;
 
-  const alg = configuration.keyAlgorithm;
+  const alg = getConfig().keyAlgorithm;
   const caKeys = await crypto.subtle.generateKey(alg, true, ['sign', 'verify']);
   const rootCaResult = await createCa({
     name: rootCa.name,

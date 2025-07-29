@@ -1,9 +1,9 @@
 import { SSMClient } from '@aws-sdk/client-ssm';
-import { configuration } from './config';
+import { getConfig } from './getConfig';
 
 let client: SSMClient | undefined = undefined;
 
 export function getSSMClient() {
-  client ??= new SSMClient({ region: configuration.region });
+  client ??= new SSMClient({ region: getConfig().region });
   return client;
 }

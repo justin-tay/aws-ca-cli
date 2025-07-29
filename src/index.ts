@@ -7,9 +7,16 @@ import { loadCertificateChain } from './loadCertificateChain';
 import { Pkcs10CertificateRequest, X509CrlReason } from '@peculiar/x509';
 import { issueCertificate } from './issueCertificate';
 import { stringToArrayBuffer } from 'pvutils';
-import { configuration } from './config';
+import { getConfig } from './getConfig';
 import { exportPkcs7CertificateChain } from './exportPkcs7CertificateChain';
 import { revokeCertificate } from './revokeCertificate';
+import { config } from 'dotenv';
+
+config();
+
+console.log(process.env);
+
+console.log(getConfig());
 
 initializeCryptoEngine();
 
@@ -28,7 +35,7 @@ program
   .action(async function () {
     try {
       const certificateChain = await loadCertificateChain({
-        issuerName: configuration.subCaName,
+        issuerName: getConfig().subCaName,
       });
       if ('p12' === this.opts().outform) {
         const content = await createPkcs12Keystore({

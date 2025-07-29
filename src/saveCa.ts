@@ -8,7 +8,7 @@ import { getDynamoDBDocumentClient } from './getDynamoDBDocumentClient';
 import { saveParameter } from './saveParameter';
 import { createCrl } from './createCrl';
 import { saveBucket } from './saveBucket';
-import { configuration } from './config';
+import { getConfig } from './getConfig';
 
 export async function saveCa(params: {
   certificate: X509Certificate;
@@ -40,7 +40,7 @@ export async function saveCa(params: {
   );
   if (keySecretId) {
     const command = new PutCommand({
-      TableName: configuration.caTableName,
+      TableName: getConfig().caTableName,
       Item: {
         SubjectName: certificate.subjectName.toString(),
         IssuerName: certificate.issuerName.toString(),
@@ -58,7 +58,7 @@ export async function saveCa(params: {
     return response;
   } else if (keyParameterName) {
     const command = new PutCommand({
-      TableName: configuration.caTableName,
+      TableName: getConfig().caTableName,
       Item: {
         SubjectName: certificate.subjectName.toString(),
         IssuerName: certificate.issuerName.toString(),

@@ -1,5 +1,5 @@
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
-import { configuration } from './config';
+import { getConfig } from './getConfig';
 import { X509Certificate } from '@peculiar/x509';
 import { loadSecret } from './loadSecret';
 import { importPkcs8PemPrivateKey } from './importPkcs8PemPrivateKey';
@@ -12,10 +12,10 @@ import { loadParameter } from './loadParameter';
 export async function loadSubCa() {
   const docClient = getDynamoDBDocumentClient();
   const command = new QueryCommand({
-    TableName: configuration.caTableName,
+    TableName: getConfig().caTableName,
     KeyConditionExpression: 'SubjectName = :subjectName',
     ExpressionAttributeValues: {
-      ':subjectName': configuration.subCaName,
+      ':subjectName': getConfig().subCaName,
     },
     ConsistentRead: true,
   });
@@ -40,7 +40,7 @@ export async function loadSubCa() {
     if (!pkcs8pem) {
       return {};
     }
-    const alg = configuration.keyAlgorithm;
+    const alg = getConfig().keyAlgorithm;
     const privateKey = await importPkcs8PemPrivateKey(
       pkcs8pem,
       getPassword(response.Items[0].Hash),

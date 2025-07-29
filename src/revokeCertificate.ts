@@ -10,7 +10,7 @@ import {
 import { createCrl } from './createCrl';
 import { importPkcs8PemPrivateKey } from './importPkcs8PemPrivateKey';
 import { getPassword } from './getPassword';
-import { configuration } from './config';
+import { getConfig } from './getConfig';
 import { loadParameter } from './loadParameter';
 import { loadSecret } from './loadSecret';
 import { saveBucket } from './saveBucket';
@@ -26,7 +26,7 @@ export async function revokeCertificate(params: {
   const { ca, serialNumber, reason } = params;
   const docClient = getDynamoDBDocumentClient();
   const command = new QueryCommand({
-    TableName: configuration.caTableName,
+    TableName: getConfig().caTableName,
     KeyConditionExpression: 'SubjectName = :subjectName',
     ExpressionAttributeValues: {
       ':subjectName': ca,
@@ -47,7 +47,7 @@ export async function revokeCertificate(params: {
   }
 
   const certificateCommand = new QueryCommand({
-    TableName: configuration.caIndexTableName,
+    TableName: getConfig().caIndexTableName,
     KeyConditionExpression:
       'IssuerName = :issuerName and SerialNumber = :serialNumber',
     ExpressionAttributeValues: {
@@ -88,7 +88,7 @@ export async function revokeCertificate(params: {
   if (!pkcs8pem) {
     return null;
   }
-  const alg = configuration.keyAlgorithm;
+  const alg = getConfig().keyAlgorithm;
   const privateKey = await importPkcs8PemPrivateKey(
     pkcs8pem,
     getPassword(response.Items[0].Hash),
@@ -123,12 +123,12 @@ export async function revokeCertificate(params: {
     issuer: ca,
     signingKey: privateKey,
     entries,
-    signingAlgorithm: configuration.keyAlgorithm,
+    signingAlgorithm: getConfig().keyAlgorithm,
   });
   await saveBucket(crlBucketName, crlKey, new Uint8Array(crl.rawData));
 
   const updateCommand = new UpdateCommand({
-    TableName: configuration.caIndexTableName,
+    TableName: getConfig().caIndexTableName,
     Key: {
       IssuerName: ca,
       SerialNumber: serialNumber,
