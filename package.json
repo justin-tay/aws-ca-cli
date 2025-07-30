@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "tsx src/index.ts",
-    "build": "node esbuild.config.js",
+    "build": "node esbuild.config.mjs",
     "test": "vitest",
     "lint": "eslint .",
     "lint:fix": "eslint . --ext .ts --fix"
