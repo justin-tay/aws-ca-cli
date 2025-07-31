@@ -7,5 +7,5 @@ export function getObjectUrl(params: {
 }) {
   const { bucketName, key } = params;
   const region = params.region ?? getConfig().region;
-  return `http://${bucketName}.s3.${region}.com/${key}`;
+  return `http://${bucketName}.s3.${region}.amazonaws.com/${key}`;
 }
