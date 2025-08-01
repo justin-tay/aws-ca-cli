@@ -19,16 +19,15 @@ describe('saveSecret', () => {
   it('should save secret', async () => {
     mockSend.mockImplementation((command) => {
       if (command instanceof CreateSecretCommand) {
-        expect(command.input.Name).toBe('/prod/aws-ca/sub-ca/key');
+        expect(command.input.Name).toBe('prod/aws-ca/sub-ca/key');
         const result: Partial<CreateSecretCommandOutput> = {};
-        result.Name = '/prod/aws-ca/sub-ca/key';
+        result.Name = 'prod/aws-ca/sub-ca/key';
         return Promise.resolve(result);
       }
       throw Error();
     });
-
-    expect(
-      async () => await saveSecret('/prod/aws-ca/sub-ca/key', 'test'),
-    ).not.toThrowError();
+    await expect(
+      saveSecret('prod/aws-ca/sub-ca/key', 'test'),
+    ).resolves.not.toThrowError();
   });
 });
