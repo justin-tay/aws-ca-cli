@@ -14,22 +14,24 @@ interface Config {
   rootCaName: string;
   rootCaKeySecretId: string;
   rootCaKeyParameterName: string;
-  rootCaCrlBucketName: string | null;
+  rootCaCrlBucketName?: string;
   rootCaCrlKey: string;
   subCaName: string;
   subCaKeySecretId: string;
   subCaKeyParameterName: string;
-  subCaCrlBucketName: string | null;
+  subCaCrlBucketName?: string;
   subCaCrlKey: string;
   keyStore: KeyStore;
   keyAlgorithm: RsaHashedKeyGenParams | EcKeyGenParams;
   region: string;
   pepper: string;
+  secretsManagerKmsKeyId?: string;
+  parameterKmsKeyId?: string;
 }
 
 function nonEmpty(value: string | undefined) {
   if (!value || value === '') {
-    return null;
+    return undefined;
   }
   return value;
 }
@@ -64,7 +66,8 @@ export function getConfig() {
         '/prod/aws-ca/root-ca/key',
       rootCaCrlBucketName:
         nonEmpty(process.env.ROOT_CA_CRL_BUCKET_NAME) ??
-        nonEmpty(process.env.CA_CRL_BUCKET_NAME),
+        nonEmpty(process.env.CA_CRL_BUCKET_NAME) ??
+        undefined,
       rootCaCrlKey: nonEmpty(process.env.ROOT_CA_CRL_KEY) ?? 'root-ca.crl',
       subCaName: nonEmpty(process.env.SUB_CA_NAME) ?? getSubCaName(name),
       subCaKeySecretId:
@@ -74,7 +77,8 @@ export function getConfig() {
         '/prod/aws-ca/sub-ca/key',
       subCaCrlBucketName:
         nonEmpty(process.env.SUB_CA_CRL_BUCKET_NAME) ??
-        nonEmpty(process.env.CA_CRL_BUCKET_NAME),
+        nonEmpty(process.env.CA_CRL_BUCKET_NAME) ??
+        undefined,
       subCaCrlKey: nonEmpty(process.env.SUB_CA_CRL_KEY) ?? 'sub-ca.crl',
       keyStore:
         (nonEmpty(process.env.KEYSTORE) as KeyStore) ?? KeyStore.ParameterStore,
@@ -82,6 +86,10 @@ export function getConfig() {
       keyAlgorithm,
       region: nonEmpty(process.env.AWS_REGION) ?? 'ap-southeast-1',
       pepper,
+      parameterKmsKeyId:
+        nonEmpty(process.env.PARAMETER_KMS_KEY_ID) ?? undefined,
+      secretsManagerKmsKeyId:
+        nonEmpty(process.env.SECRETS_MANAGER_KMS_KEY_ID) ?? undefined,
     };
   }
   return config;

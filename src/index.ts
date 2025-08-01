@@ -12,7 +12,7 @@ import { exportPkcs7CertificateChain } from './exportPkcs7CertificateChain';
 import { revokeCertificate } from './revokeCertificate';
 import { config } from 'dotenv';
 
-config({ quiet: true});
+config({ quiet: true });
 
 initializeCryptoEngine();
 

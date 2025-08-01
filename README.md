@@ -25,45 +25,46 @@ Commands:
 
 ## Configuration
 
-| Environment Variable          | Description                                                | Default
-| ----------------------------- | ---------------------------------------------------------- | -----------
-| `KEYSTORE`                    | Used to configure if the key is stored in `ParameterStore` or `SecretsManager`           | `ParameterStore`
-| `CA_TABLE_NAME`               | DynamoDB Table storing the Certificate Authority           | `CertificateAuthority`
-| `CA_INDEX_TABLE_NAME`         | DynamoDB Table storing the Certificate Authority Index     | `CertificateAuthorityIndex`
-| `ROOT_CA_NAME`                | Name for the Root CA                                       | `CN=Demo Root CA`
-| `ROOT_CA_KEY_SECRET_ID`       | Secret ID used to store the Root CA Key                    | `prod/aws-ca/root-ca/key`
-| `ROOT_CA_KEY_PARAMETER_NAME`  | Parameter Name used to store the Root CA Key               | `/prod/aws-ca/root-ca/key`
-| `ROOT_CA_CRL_BUCKET_NAME`     | Bucket Name used to store the Certificate Revocation List  | 
-| `ROOT_CA_CRL_KEY`             | Bucket Key used to store the Certificate Revocation List   | `root-ca.crl`
-| `SUB_CA_NAME `                | Name for the Sub CA                                        | `CN=Demo Sub CA 1`
-| `SUB_CA_KEY_SECRET_ID`        | Secret ID used to store the Sub CA Key                     | `prod/aws-ca/sub-ca/key`
-| `SUB_CA_KEY_PARAMETER_NAME`   | Parameter Name used to store the Sub CA Key                | `/prod/aws-ca/sub-ca/key`
-| `SUB_CA_CRL_BUCKET_NAME`      | Bucket Name used to store the Certificate Revocation List  | 
-| `SUB_CA_CRL_KEY`              | Bucket Key used to store the Certificate Revocation List   | `sub-ca.crl`
-| `AWS_REGION`                  | AWS Region                                                 | `ap-southeast-1`
+| Environment Variable         | Description                                                                    | Default                     |
+| ---------------------------- | ------------------------------------------------------------------------------ | --------------------------- |
+| `KEYSTORE`                   | Used to configure if the key is stored in `ParameterStore` or `SecretsManager` | `ParameterStore`            |
+| `CA_TABLE_NAME`              | DynamoDB Table storing the Certificate Authority                               | `CertificateAuthority`      |
+| `CA_INDEX_TABLE_NAME`        | DynamoDB Table storing the Certificate Authority Index                         | `CertificateAuthorityIndex` |
+| `ROOT_CA_NAME`               | Name for the Root CA                                                           | `CN=Demo Root CA`           |
+| `ROOT_CA_KEY_SECRET_ID`      | Secret ID used to store the Root CA Key                                        | `prod/aws-ca/root-ca/key`   |
+| `ROOT_CA_KEY_PARAMETER_NAME` | Parameter Name used to store the Root CA Key                                   | `/prod/aws-ca/root-ca/key`  |
+| `ROOT_CA_CRL_BUCKET_NAME`    | Bucket Name used to store the Certificate Revocation List                      |
+| `ROOT_CA_CRL_KEY`            | Bucket Key used to store the Certificate Revocation List                       | `root-ca.crl`               |
+| `SUB_CA_NAME `               | Name for the Sub CA                                                            | `CN=Demo Sub CA 1`          |
+| `SUB_CA_KEY_SECRET_ID`       | Secret ID used to store the Sub CA Key                                         | `prod/aws-ca/sub-ca/key`    |
+| `SUB_CA_KEY_PARAMETER_NAME`  | Parameter Name used to store the Sub CA Key                                    | `/prod/aws-ca/sub-ca/key`   |
+| `SUB_CA_CRL_BUCKET_NAME`     | Bucket Name used to store the Certificate Revocation List                      |
+| `SUB_CA_CRL_KEY`             | Bucket Key used to store the Certificate Revocation List                       | `sub-ca.crl`                |
+| `PARAMETER_KMS_KEY_ID`       | The Key Management Service (KMS) ID used to encrypt the parameter              |
+| `SECRETS_MANAGER_KMS_KEY_ID` | The Key Management Service (KMS) ID used to encrypt the secret                 |
+| `AWS_REGION`                 | AWS Region                                                                     | `ap-southeast-1`            |
 
 ## Resources
 
-| Logical ID                    | Type                             | Description
-| ----------------------------- | -------------------------------- | -----------
-| `CertificateAuthority`        | `AWS::DynamoDB::Table`           | Stores the certificate authorities
-| `CertificateAuthorityIndex`   | `AWS::DynamoDB::Table`           | Stores the certificates issued
-|                               | `AWS::S3::Bucket`                | Stores the certificate revocation list
+| Logical ID                  | Type                   | Description                            |
+| --------------------------- | ---------------------- | -------------------------------------- |
+| `CertificateAuthority`      | `AWS::DynamoDB::Table` | Stores the certificate authorities     |
+| `CertificateAuthorityIndex` | `AWS::DynamoDB::Table` | Stores the certificates issued         |
+|                             | `AWS::S3::Bucket`      | Stores the certificate revocation list |
 
+The following resources are used if `KEYSTORE` is `ParameterStore`. Note that standard tier parameters are free.
 
-The following resources are used if `KEYSTORE` is `ParameterStore`.
+| Logical ID                 | Type                  | Description                                                          |
+| -------------------------- | --------------------- | -------------------------------------------------------------------- |
+| `/prod/aws-ca/root-ca/key` | `AWS::SSM::Parameter` | Stores the encrypted private key for the Root CA as a `SecureString` |
+| `/prod/aws-ca/sub-ca/key`  | `AWS::SSM::Parameter` | Stores the encrypted private key for the Sub CA as a `SecureString`  |
 
-| Logical ID                    | Type                             | Description
-| ----------------------------- | -------------------------------- | -----------
-| `/prod/aws-ca/root-ca/key`    | `AWS::SSM::Parameter`            | Stores the encrypted private key for the Root CA as a `SecureString`
-| `/prod/aws-ca/sub-ca/key`     | `AWS::SSM::Parameter`            | Stores the encrypted private key for the Sub CA as a `SecureString`
+The following resources are used if `KEYSTORE` is `SecretsManager`. Note that each secret costs $0.40 USD per month.
 
-The following resources are used if `KEYSTORE` is `SecretsManager`.
-
-| Logical ID                    | Type                             | Description
-| ----------------------------- | -------------------------------- | -----------
-| `prod/aws-ca/root-ca/key`     | `AWS::SecretsManager::Secret`    | Stores the encrypted private key for the Root CA
-| `prod/aws-ca/sub-ca/key`      | `AWS::SecretsManager::Secret`    | Stores the encrypted private key for the Sub CA
+| Logical ID                | Type                          | Description                                      |
+| ------------------------- | ----------------------------- | ------------------------------------------------ |
+| `prod/aws-ca/root-ca/key` | `AWS::SecretsManager::Secret` | Stores the encrypted private key for the Root CA |
+| `prod/aws-ca/sub-ca/key`  | `AWS::SecretsManager::Secret` | Stores the encrypted private key for the Sub CA  |
 
 ### Destroy Resources
 
@@ -72,11 +73,12 @@ The following script will destroy the resources created otherwise costs will be 
 ```shell
 ./bin/destroy.sh
 ```
+
 ## Certificate Signing Request
 
 ### Windows
 
-When using Windows the [`certreq`](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certreq_1) application can be used to generate the CSR using an `inf` configuration file. 
+When using Windows the [`certreq`](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certreq_1) application can be used to generate the CSR using an `inf` configuration file.
 
 The private key will stored in the Windows certificate store in the `Certificate Enrollment Requests` folder in either the `Current User` or `Local Computer` certificate store if `MachineKeySet` is `TRUE`.
 
@@ -92,8 +94,8 @@ certreq -new config.inf client.csr
 
 ```ini
 [Version]
-Signature= "$Windows NT$" 
- 
+Signature= "$Windows NT$"
+
 [NewRequest]
 Subject = "CN=DeviceUid"
 KeySpec = AT_KEYEXCHANGE
@@ -110,7 +112,7 @@ RequestType = PKCS10
 KeyUsage = 0xa0
 HashAlgorithm = SHA256
 SuppressDefaults = true
- 
+
 [EnhancedKeyUsageExtension]
 OID=1.3.6.1.5.5.7.3.2
 
