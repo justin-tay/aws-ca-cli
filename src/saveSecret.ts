@@ -18,7 +18,11 @@ export async function saveSecret(secretId: string, secretString: string) {
   try {
     return await client.send(createSecretCommand);
   } catch (err) {
-    if (err instanceof Error && err.name === 'ResourceExistsException') {
+    if (
+      err instanceof Error &&
+      (err.name === 'ResourceExistsException' ||
+        err.name === 'AccessDeniedException')
+    ) {
       const putSecretValueCommand = new PutSecretValueCommand({
         SecretId: secretId,
         SecretString: secretString,

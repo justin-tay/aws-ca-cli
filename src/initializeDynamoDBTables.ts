@@ -6,14 +6,26 @@ export async function initializeDynamoDBTables() {
   try {
     await createCaTable();
   } catch (err: unknown) {
-    if (err instanceof Error && err.name !== 'ResourceInUseException') {
+    if (
+      err instanceof Error &&
+      !(
+        err.name === 'ResourceInUseException' ||
+        err.name === 'AccessDeniedException'
+      )
+    ) {
       throw err;
     }
   }
   try {
     await createCaIndexTable();
   } catch (err: unknown) {
-    if (err instanceof Error && err.name !== 'ResourceInUseException') {
+    if (
+      err instanceof Error &&
+      !(
+        err.name === 'ResourceInUseException' ||
+        err.name === 'AccessDeniedException'
+      )
+    ) {
       throw err;
     }
   }

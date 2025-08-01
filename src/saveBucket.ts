@@ -1,6 +1,4 @@
 import {
-  BucketAlreadyExists,
-  BucketAlreadyOwnedByYou,
   CreateBucketCommand,
   PutBucketPolicyCommand,
   PutObjectCommand,
@@ -21,9 +19,11 @@ export async function saveBucket(
     await client.send(createBucketCommand);
   } catch (err) {
     if (
+      err instanceof Error &&
       !(
-        err instanceof BucketAlreadyExists ||
-        err instanceof BucketAlreadyOwnedByYou
+        err.name === 'BucketAlreadyExists' ||
+        err.name === 'BucketAlreadyOwnedByYou' ||
+        err.name === 'AccessDeniedException'
       )
     ) {
       throw err;
@@ -35,7 +35,13 @@ export async function saveBucket(
       BlockPublicPolicy: false,
     },
   });
-  await client.send(putPublicAccessBlockCommand);
+  try {
+    await client.send(putPublicAccessBlockCommand);
+  } catch (err) {
+    if (err instanceof Error && err.name !== 'AccessDeniedException') {
+      throw err;
+    }
+  }
   const publicReadPolicy = {
     Version: '2012-10-17',
     Statement: [
@@ -52,7 +58,13 @@ export async function saveBucket(
     Bucket: bucketName,
     Policy: JSON.stringify(publicReadPolicy),
   });
-  await client.send(putBucketPolicyCommand);
+  try {
+    await client.send(putBucketPolicyCommand);
+  } catch (err) {
+    if (err instanceof Error && err.name !== 'AccessDeniedException') {
+      throw err;
+    }
+  }
   const putObjectCommand = new PutObjectCommand({
     Bucket: bucketName,
     Key: key,
