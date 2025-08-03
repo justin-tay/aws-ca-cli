@@ -45,12 +45,26 @@ export function getConfig() {
     const pepper =
       nonEmpty(process.env.PEPPER) ?? '015c7bd5-46ac-485e-88ef-0355c80337de';
 
-    const keyAlgorithm = {
-      name: 'RSASSA-PKCS1-v1_5',
-      hash: 'SHA-256',
-      modulusLength: 2048,
-      publicExponent: new Uint8Array([1, 0, 1]),
-    };
+    let keyAlgorithm;
+    const rsaModulusLength = nonEmpty(process.env.RSA_MODULUS_LENGTH);
+    const ecCurve = nonEmpty(process.env.EC_CURVE);
+    if (ecCurve) {
+      keyAlgorithm = {
+        name: 'ECDSA',
+        namedCurve: ecCurve,
+      };
+    } else {
+      let modulusLength;
+      if (rsaModulusLength) {
+        modulusLength = parseInt(rsaModulusLength);
+      }
+      keyAlgorithm = {
+        name: 'RSASSA-PKCS1-v1_5',
+        hash: 'SHA-256',
+        modulusLength: modulusLength ?? 2048,
+        publicExponent: new Uint8Array([1, 0, 1]),
+      };
+    }
     config = {
       caTableName:
         nonEmpty(process.env.CA_TABLE_NAME) ?? 'CertificateAuthority',
