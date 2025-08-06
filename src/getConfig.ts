@@ -70,7 +70,7 @@ export function getConfig() {
         nonEmpty(process.env.CA_TABLE_NAME) ?? 'CertificateAuthority',
       caIndexTableName:
         nonEmpty(process.env.CA_INDEX_TABLE_NAME) ??
-        'CertificateAuthortityIndex',
+        'CertificateAuthorityIndex',
       rootCaName: nonEmpty(process.env.ROOT_CA_NAME) ?? getRootCaName(name),
       rootCaKeySecretId:
         nonEmpty(process.env.ROOT_CA_KEY_SECRET_ID) ??
