@@ -15,5 +15,6 @@ dist
 *.csr
 *.inf
 *.crt
+*.p7b
 
 .env
